@@ -20,9 +20,8 @@ import { API_KEYS } from '../../shared/api-keys';
   styleUrls: ['./searchbar.component.scss']
 })
 export class SearchbarComponent implements OnInit {
-  myControl = new FormControl(); //dont really know how to name it
-  // options: string[] = ['One', 'Two', 'Three'];
-  options;
+  myControl = new FormControl(); 
+
   public data = this.myControl.valueChanges.pipe(
     startWith(this.myControl.value),
     filter((value) => value?.length >= 3),
