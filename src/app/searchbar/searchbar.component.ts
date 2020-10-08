@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import {
@@ -12,6 +12,7 @@ import {
 } from 'rxjs/operators';
 
 import { API_KEYS } from '../../shared/api-keys';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 
 @Component({
@@ -20,6 +21,8 @@ import { API_KEYS } from '../../shared/api-keys';
   styleUrls: ['./searchbar.component.scss']
 })
 export class SearchbarComponent implements OnInit {
+  // @Output()optionSelected: EventEmitter<MatAutocompleteSelectedEvent>;
+
   myControl = new FormControl(); 
 //i dont really know what happens from line 25 to line 34
   public data = this.myControl.valueChanges.pipe(
@@ -32,7 +35,7 @@ export class SearchbarComponent implements OnInit {
         `${API_KEYS.geoUrl}?geocode=${value}&apikey=${API_KEYS.geoKey}&format=json`
       )
     ),
-    map(data => data.response.GeoObjectCollection.featureMember.map(item => item.GeoObject))
+    map( (data: any ) => data.response.GeoObjectCollection.featureMember.map(item => item.GeoObject))
   );
 
   constructor(
@@ -42,8 +45,8 @@ export class SearchbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onClick() {
-    console.log(this.data);
+  selectValue(event) {
+    console.log(event.option._mostRecentViewValue);
     
   }
   
