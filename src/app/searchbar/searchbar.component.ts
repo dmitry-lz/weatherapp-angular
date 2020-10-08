@@ -21,7 +21,7 @@ import { API_KEYS } from '../../shared/api-keys';
 })
 export class SearchbarComponent implements OnInit {
   myControl = new FormControl(); 
-
+//i dont really know what happens from line 25 to line 34
   public data = this.myControl.valueChanges.pipe(
     startWith(this.myControl.value),
     filter((value) => value?.length >= 3),
