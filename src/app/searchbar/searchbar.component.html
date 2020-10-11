@@ -6,8 +6,10 @@
            matInput
            [formControl]="myControl"
            [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectValue($event)">
-        <mat-option *ngFor="let option of data | async" [value]="option.name">
+    <mat-autocomplete #auto="matAutocomplete"
+      [displayWith]="displayWith"
+      (optionSelected)="selectValue($event)">
+        <mat-option *ngFor="let option of options" [value]="option">
           {{option.name}}, {{option.description}}, {{option.Point.pos}}
         </mat-option>
     </mat-autocomplete>
