@@ -9,9 +9,10 @@
     <mat-autocomplete #auto="matAutocomplete"
       [displayWith]="displayWith"
       (optionSelected)="selectValue($event)">
-        <mat-option *ngFor="let option of options" [value]="option">
+        <mat-option *ngFor="let option of options" [value]="option" (select)="sendPlace.emit()">
           {{option.name}}, {{option.description}}, {{option.Point.pos}}
         </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 </form>
+<app-result-bar [place]="selectedPlace"></app-result-bar>

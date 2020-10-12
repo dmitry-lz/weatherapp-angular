@@ -10,9 +10,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { SearchbarComponent } from './searchbar/searchbar.component';
+import { ResultBarComponent } from './result-bar/result-bar.component';
 
 @NgModule({
-  declarations: [AppComponent, SearchbarComponent],
+  declarations: [AppComponent, SearchbarComponent, ResultBarComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

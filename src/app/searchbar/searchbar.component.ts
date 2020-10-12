@@ -1,10 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import {
   switchMap,
   startWith,
-  withLatestFrom,
   distinctUntilChanged,
   debounceTime,
   filter,
@@ -12,8 +11,6 @@ import {
 } from 'rxjs/operators';
 
 import { API_KEYS } from '../../shared/api-keys';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { Subscription } from 'rxjs';
 
 
@@ -26,6 +23,7 @@ export class SearchbarComponent implements OnInit {
   myControl = new FormControl(); 
   displayWith = (value) => value?.name;
   options = [];
+  selectedPlace: object;
   optionSubscription: Subscription;
 
   constructor(
@@ -55,8 +53,7 @@ export class SearchbarComponent implements OnInit {
   }
 
   selectValue(event) {
-    console.log(event.option);
-    
+    this.selectedPlace = event.option.value;
   }
   
 
