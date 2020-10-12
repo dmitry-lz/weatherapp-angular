@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 
 import {
@@ -8,12 +7,12 @@ import {
   distinctUntilChanged,
   debounceTime,
   filter,
-  map,
 } from 'rxjs/operators';
 
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { WeatherService } from '../weather.service';
+import { GeoObject } from '../weather';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-searchbar',
@@ -24,9 +23,9 @@ export class SearchbarComponent implements OnInit {
   constructor(private readonly weatherService: WeatherService) {}
 
   myControl = new FormControl();
-  options: Observable<any[]>;
-  selectedPlace: object;
-  displayWith = (value) => value?.name;
+  options: Observable<GeoObject[]>;
+  selectedPlace: GeoObject;
+  displayWith = (value: GeoObject) => value?.name;
 
   ngOnInit(): void {
     this.options = this.myControl.valueChanges.pipe(
@@ -34,17 +33,11 @@ export class SearchbarComponent implements OnInit {
       filter((value) => value?.length >= 3),
       distinctUntilChanged(),
       debounceTime(200),
-      // move to service
-      switchMap((value) => this.weatherService.searchPlaces(value)),
-      map((data: any) =>
-        data.response.GeoObjectCollection.featureMember.map(
-          (item) => item.GeoObject
-        )
-      )
+      switchMap((value) => this.weatherService.searchPlaces(value))
     );
   }
 
-  selectValue(event) {
-    this.selectedPlace = event.option.value;
+  selectValue(event: MatAutocompleteSelectedEvent): void {
+    this.selectValue = event.option.value;
   }
 }
