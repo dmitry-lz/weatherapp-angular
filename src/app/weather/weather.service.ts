@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { GetPlacesResponse } from './weather';
+import { GeoObject, GetPlacesResponse, Point, PositionCoords } from './weather';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { GetPlacesResponse } from './weather';
 export class WeatherService {
   constructor(private readonly http: HttpClient) {}
 
-  public searchPlaces(geocode: string): Observable<any[]> {
+  public searchPlaces(geocode: string): Observable<GeoObject[]> {
     return this.http
       .get<GetPlacesResponse>(environment.api_keys.geoUrl, {
         params: {
@@ -27,5 +27,18 @@ export class WeatherService {
           )
         )
       );
+  }
+
+  public getWeatherByPoint(point: Point): Observable<any> {
+    const coords = point.pos.split(' ') as PositionCoords;
+
+    return this.http.get(environment.api_keys.weatherUrl, {
+      params: {
+        lat: coords[0],
+        lon: coords[1],
+        units: 'metirc',
+        appid: environment.api_keys.weatherKey,
+      },
+    });
   }
 }

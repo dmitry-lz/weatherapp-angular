@@ -118,3 +118,5 @@ export interface PlacesResponse {
 export interface GetPlacesResponse {
   response: PlacesResponse;
 }
+
+export type PositionCoords = [string, string];
