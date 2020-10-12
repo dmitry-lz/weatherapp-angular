@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GeoObject } from '../weather';
+import { GeoObject, WeatherResponse } from '../weather';
 
 @Component({
   selector: 'app-result-bar',
@@ -8,6 +8,7 @@ import { GeoObject } from '../weather';
 })
 export class ResultBarComponent implements OnInit {
   @Input() place: GeoObject;
+  @Input() weather: WeatherResponse;
 
   ngOnInit(): void {}
 

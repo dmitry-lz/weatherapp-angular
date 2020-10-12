@@ -5,3 +5,10 @@
   {{ place.Point.pos }}
   <button (click)="log()">click</button>
 </div>
+
+<div
+  class="weather"
+  *ngIf="weather"
+>
+  {{weather | json}}
+</div>

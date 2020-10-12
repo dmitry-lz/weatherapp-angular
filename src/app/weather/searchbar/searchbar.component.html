@@ -22,4 +22,8 @@
     </mat-autocomplete>
   </mat-form-field>
 </form>
-<app-result-bar [place]="selectedPlace"></app-result-bar>
+
+<app-result-bar
+  [place]="selectedPlace"
+  [weather]="selectedWeather | async"
+></app-result-bar>

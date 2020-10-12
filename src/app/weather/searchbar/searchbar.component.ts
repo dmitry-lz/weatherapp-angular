@@ -11,7 +11,7 @@ import {
 
 import { Observable } from 'rxjs';
 import { WeatherService } from '../weather.service';
-import { GeoObject } from '../weather';
+import { GeoObject, WeatherResponse } from '../weather';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
@@ -25,6 +25,8 @@ export class SearchbarComponent implements OnInit {
   myControl = new FormControl();
   options: Observable<GeoObject[]>;
   selectedPlace: GeoObject;
+  selectedWeather: Observable<WeatherResponse>;
+
   displayWith = (value: GeoObject) => value?.name;
 
   ngOnInit(): void {
@@ -38,6 +40,9 @@ export class SearchbarComponent implements OnInit {
   }
 
   selectValue(event: MatAutocompleteSelectedEvent): void {
-    this.selectValue = event.option.value;
+    const place: GeoObject = event.option.value;
+
+    this.selectedPlace = place;
+    this.selectedWeather = this.weatherService.getWeatherByPoint(place.Point);
   }
 }
