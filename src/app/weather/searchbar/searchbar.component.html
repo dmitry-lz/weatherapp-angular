@@ -5,7 +5,7 @@
       placeholder="Выберите город"
       aria-label="Number"
       matInput
-      [formControl]="myControl"
+      [formControl]="searchControl"
       [matAutocomplete]="auto"
     >
     <mat-autocomplete
@@ -23,7 +23,9 @@
   </mat-form-field>
 </form>
 
+
 <app-result-bar
-  [place]="selectedPlace"
-  [weather]="selectedWeather | async"
+  [place]="item.place"
+  [weather]="item.weather"
+  *ngFor="let item of weatherItems | async"
 ></app-result-bar>

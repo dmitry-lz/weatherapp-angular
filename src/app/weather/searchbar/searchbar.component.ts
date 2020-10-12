@@ -7,12 +7,18 @@ import {
   distinctUntilChanged,
   debounceTime,
   filter,
+  scan,
 } from 'rxjs/operators';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { WeatherService } from '../weather.service';
 import { GeoObject, WeatherResponse } from '../weather';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
+export interface ResultItem {
+  place: GeoObject;
+  weather: WeatherResponse;
+}
 
 @Component({
   selector: 'app-searchbar',
@@ -22,16 +28,20 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 export class SearchbarComponent implements OnInit {
   constructor(private readonly weatherService: WeatherService) {}
 
-  myControl = new FormControl();
-  options: Observable<GeoObject[]>;
-  selectedPlace: GeoObject;
-  selectedWeather: Observable<WeatherResponse>;
+  public options: Observable<GeoObject[]>;
+  public searchControl = new FormControl();
+  public selectedPlace = new Subject<GeoObject>();
 
-  displayWith = (value: GeoObject) => value?.name;
+  public weatherItems: Observable<ResultItem[]> = this.selectedPlace.pipe(
+    switchMap((place) => this.weatherService.getWeatherByPlace(place)),
+    scan((items, resultItem) => [...items, resultItem], [])
+  );
 
-  ngOnInit(): void {
-    this.options = this.myControl.valueChanges.pipe(
-      startWith(this.myControl.value),
+  public displayWith = (value: GeoObject) => value?.name;
+
+  public ngOnInit(): void {
+    this.options = this.searchControl.valueChanges.pipe(
+      startWith(this.searchControl.value),
       filter((value) => value?.length >= 3),
       distinctUntilChanged(),
       debounceTime(200),
@@ -39,10 +49,9 @@ export class SearchbarComponent implements OnInit {
     );
   }
 
-  selectValue(event: MatAutocompleteSelectedEvent): void {
+  public selectValue(event: MatAutocompleteSelectedEvent): void {
     const place: GeoObject = event.option.value;
 
-    this.selectedPlace = place;
-    this.selectedWeather = this.weatherService.getWeatherByPoint(place.Point);
+    this.selectedPlace.next(place);
   }
 }

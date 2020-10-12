@@ -10,5 +10,7 @@
   class="weather"
   *ngIf="weather"
 >
-  {{weather | json}}
+  <pre>
+    {{weather.name}}
+  </pre>
 </div>
