@@ -13,6 +13,7 @@ import {
 
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { WeatherService } from '../weather.service';
 
 @Component({
   selector: 'app-searchbar',
@@ -20,7 +21,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./searchbar.component.scss'],
 })
 export class SearchbarComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly weatherService: WeatherService) {}
 
   myControl = new FormControl();
   options: Observable<any[]>;
@@ -34,11 +35,7 @@ export class SearchbarComponent implements OnInit {
       distinctUntilChanged(),
       debounceTime(200),
       // move to service
-      switchMap((value) =>
-        this.http.get(
-          `${environment.api_keys.geoUrl}?geocode=${value}&apikey=${environment.api_keys.geoKey}&format=json`
-        )
-      ),
+      switchMap((value) => this.weatherService.searchPlaces(value)),
       map((data: any) =>
         data.response.GeoObjectCollection.featureMember.map(
           (item) => item.GeoObject
