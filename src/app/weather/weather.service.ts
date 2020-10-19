@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ResultItem } from './searchbar/searchbar.component';
 import {
   GeoObject,
   GetPlacesResponse,
   Point,
   PositionCoords,
+  ResultItem,
   WeatherResponse,
 } from './weather';
 
@@ -36,6 +36,20 @@ export class WeatherService {
       );
   }
 
+  public getWeatherByPoint(point: Point): Observable<WeatherResponse> {
+    const coords = point.pos.split(' ') as PositionCoords;
+
+    return this.http.get<WeatherResponse>(environment.api_keys.weatherUrl, {
+      params: {
+        lon: coords[0],
+        lat: coords[1],
+        units: 'metirc',
+        lang: 'ru',
+        appid: environment.api_keys.weatherKey,
+      },
+    });
+  }
+
   public getWeatherByPlace(place: GeoObject): Observable<ResultItem> {
     const coords = place.Point.pos.split(' ') as PositionCoords;
 
@@ -44,7 +58,9 @@ export class WeatherService {
         params: {
           lon: coords[0],
           lat: coords[1],
-          units: 'metirc',
+          units: 'metric',
+          lang: 'ru',
+          exclude: 'current,minutely,alerts',
           appid: environment.api_keys.weatherKey,
         },
       })

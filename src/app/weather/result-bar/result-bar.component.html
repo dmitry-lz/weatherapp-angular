@@ -1,16 +1,35 @@
-<div
-  class="resultbar"
-  *ngIf="place"
->
-  {{ place.Point.pos }}
-  <button (click)="log()">click</button>
-</div>
+<swiper *ngIf="weather" [config]="config" class="weather">
+  <div class="swiper-wrapper">
+    <div *ngFor="let item of weather.daily" class="weather__item swiper-slide">
+      <span class="weather__item__time">{{item.dt * 1000 | date:'dd LLL':'ru-RU'}}</span> <!-- $ 1000 - UTC string that comes from server misses 1000 so we multiply it right here -->
+      <div class="weather__item__icon">
 
-<div
-  class="weather"
-  *ngIf="weather"
->
-  <pre>
-    {{weather.name}}
-  </pre>
-</div>
+        <div *ngIf="item.weather[0].main === 'Clouds'" class="icon cloudy">
+          <div class="cloud"></div>
+          <div class="cloud"></div>
+        </div>
+        
+        <div *ngIf="item.weather[0].main === 'Snow'" class="icon flurries"> <!-- не нашел где сейчас снег -->
+          <div class="cloud"></div>
+          <div class="snow">
+            <div class="flake"></div>
+            <div class="flake"></div>
+          </div>
+        </div>
+        
+        <div *ngIf="item.weather[0].main === 'Clear'" class="icon sunny">
+          <div class="sun">
+            <div class="rays"></div>
+          </div>
+        </div>
+        
+        <div *ngIf="item.weather[0].main === 'Rain'" class="icon rainy">
+          <div class="cloud"></div>
+          <div class="rain"></div>
+        </div>
+      </div>
+      <span class="weather__item__temp">{{item.temp.day | number : '1.0-1' : 'en-US'}}&deg;C</span>
+    </div>
+  </div>
+  <div class="swiper-pagination"></div>
+</swiper>

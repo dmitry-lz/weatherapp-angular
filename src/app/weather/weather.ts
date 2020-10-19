@@ -175,3 +175,8 @@ export interface WeatherResponse {
   name: string;
   cod: number;
 }
+
+export interface ResultItem {
+  place: GeoObject;
+  weather: WeatherResponse;
+}

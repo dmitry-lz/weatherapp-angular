@@ -12,13 +12,8 @@ import {
 
 import { Observable, Subject } from 'rxjs';
 import { WeatherService } from '../weather.service';
-import { GeoObject, WeatherResponse } from '../weather';
+import { GeoObject, WeatherResponse, ResultItem } from '../weather';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
-export interface ResultItem {
-  place: GeoObject;
-  weather: WeatherResponse;
-}
 
 @Component({
   selector: 'app-searchbar',
@@ -28,20 +23,19 @@ export interface ResultItem {
 export class SearchbarComponent implements OnInit {
   constructor(private readonly weatherService: WeatherService) {}
 
-  public options: Observable<GeoObject[]>;
-  public searchControl = new FormControl();
-  public selectedPlace = new Subject<GeoObject>();
-
-  public weatherItems: Observable<ResultItem[]> = this.selectedPlace.pipe(
-    switchMap((place) => this.weatherService.getWeatherByPlace(place)),
-    scan((items, resultItem) => [...items, resultItem], [])
+  myControl = new FormControl();
+  options: Observable<GeoObject[]>;
+  selectedPlace = new Subject<GeoObject>();
+  selectedWeather: Observable<WeatherResponse>;
+  weatherItem: Observable<ResultItem> = this.selectedPlace.pipe(
+    switchMap((place) => this.weatherService.getWeatherByPlace(place))
   );
 
-  public displayWith = (value: GeoObject) => value?.name;
+  displayWith = (value: GeoObject) => value?.name;
 
-  public ngOnInit(): void {
-    this.options = this.searchControl.valueChanges.pipe(
-      startWith(this.searchControl.value),
+  ngOnInit(): void {
+    this.options = this.myControl.valueChanges.pipe(
+      startWith(this.myControl.value),
       filter((value) => value?.length >= 3),
       distinctUntilChanged(),
       debounceTime(200),
@@ -49,7 +43,7 @@ export class SearchbarComponent implements OnInit {
     );
   }
 
-  public selectValue(event: MatAutocompleteSelectedEvent): void {
+  selectValue(event: MatAutocompleteSelectedEvent): void {
     const place: GeoObject = event.option.value;
 
     this.selectedPlace.next(place);

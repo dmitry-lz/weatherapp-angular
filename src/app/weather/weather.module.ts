@@ -6,6 +6,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
+
 import { SearchbarComponent } from './searchbar/searchbar.component';
 import { ResultBarComponent } from './result-bar/result-bar.component';
 
@@ -18,6 +20,7 @@ import { ResultBarComponent } from './result-bar/result-bar.component';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
+    NgxUsefulSwiperModule
   ],
   exports: [SearchbarComponent, ResultBarComponent],
 })
