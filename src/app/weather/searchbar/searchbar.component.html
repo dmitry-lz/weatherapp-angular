@@ -23,6 +23,4 @@
   </mat-form-field>
 </form>
 
-<app-result-bar *ngIf="weatherItem | async as item"
-  [place]="item.place"
-  [weather]="item.weather"></app-result-bar>
+<app-result-bar [result]="weatherItem | async"></app-result-bar>

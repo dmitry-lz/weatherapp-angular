@@ -121,62 +121,103 @@ export interface GetPlacesResponse {
 
 export type PositionCoords = [string, string];
 
-export interface Coord {
-  lon: number;
+export interface Coords {
+  lon: string;
+  lat: string;
+}
+
+export interface CoordsWeather {
   lat: number;
+  lon: number;
+  timezone: string;
+  timezone_offset: number;
+  hourly: Hourly[];
+  daily: Daily[];
+}
+
+export interface Daily {
+  dt: number;
+  sunrise: number;
+  sunset: number;
+  temp: Temp;
+  feels_like: FeelsLike;
+  pressure: number;
+  humidity: number;
+  dew_point: number;
+  wind_speed: number;
+  wind_deg: number;
+  weather: Weather[];
+  clouds: number;
+  pop: number;
+  uvi: number;
+  rain?: number;
+}
+
+export interface FeelsLike {
+  day: number;
+  night: number;
+  eve: number;
+  morn: number;
+}
+
+export interface Temp {
+  day: number;
+  min: number;
+  max: number;
+  night: number;
+  eve: number;
+  morn: number;
 }
 
 export interface Weather {
   id: number;
-  main: string;
-  description: string;
-  icon: string;
+  main: Main;
+  description: Description;
+  icon: Icon;
 }
 
-export interface Main {
+export enum Description {
+  Дождь = 'дождь',
+  НебольшаяОблачность = 'небольшая облачность',
+  НебольшойДождь = 'небольшой дождь',
+  ОблачноСПрояснениями = 'облачно с прояснениями',
+  Пасмурно = 'пасмурно',
+  ПеременнаяОблачность = 'переменная облачность',
+  Ясно = 'ясно',
+}
+
+export enum Icon {
+  The01N = '01n',
+  The02N = '02n',
+  The03N = '03n',
+  The04D = '04d',
+  The04N = '04n',
+  The10D = '10d',
+  The10N = '10n',
+}
+
+export enum Main {
+  Clear = 'Clear',
+  Clouds = 'Clouds',
+  Rain = 'Rain',
+}
+
+export interface Hourly {
+  dt: number;
   temp: number;
   feels_like: number;
-  temp_min: number;
-  temp_max: number;
   pressure: number;
   humidity: number;
-}
-
-export interface Wind {
-  speed: number;
-  deg: number;
-  gust: number;
-}
-
-export interface Clouds {
-  all: number;
-}
-
-export interface Sys {
-  type: number;
-  id: number;
-  country: string;
-  sunrise: number;
-  sunset: number;
-}
-
-export interface WeatherResponse {
-  coord: Coord;
-  weather: Weather[];
-  base: string;
-  main: Main;
+  dew_point: number;
+  clouds: number;
   visibility: number;
-  wind: Wind;
-  clouds: Clouds;
-  dt: number;
-  sys: Sys;
-  timezone: number;
-  id: number;
-  name: string;
-  cod: number;
+  wind_speed: number;
+  wind_deg: number;
+  weather: Weather[];
+  pop: number;
+  rain?: Rain;
 }
 
-export interface ResultItem {
-  place: GeoObject;
-  weather: WeatherResponse;
+export interface Rain {
+  '1h': number;
 }

@@ -20,7 +20,7 @@ import { ResultBarComponent } from './result-bar/result-bar.component';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    NgxUsefulSwiperModule
+    NgxUsefulSwiperModule,
   ],
   exports: [SearchbarComponent, ResultBarComponent],
 })

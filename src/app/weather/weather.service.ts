@@ -1,16 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import {
-  GeoObject,
-  GetPlacesResponse,
-  Point,
-  PositionCoords,
-  ResultItem,
-  WeatherResponse,
-} from './weather';
+import { Coords, CoordsWeather, GeoObject, GetPlacesResponse } from './weather';
 
 @Injectable({
   providedIn: 'root',
@@ -36,34 +29,15 @@ export class WeatherService {
       );
   }
 
-  public getWeatherByPoint(point: Point): Observable<WeatherResponse> {
-    const coords = point.pos.split(' ') as PositionCoords;
-
-    return this.http.get<WeatherResponse>(environment.api_keys.weatherUrl, {
+  public getCoordsWeather(coords: Coords): Observable<CoordsWeather> {
+    return this.http.get<CoordsWeather>(environment.api_keys.weatherUrl, {
       params: {
-        lon: coords[0],
-        lat: coords[1],
-        units: 'metirc',
+        ...coords,
+        units: 'metric',
         lang: 'ru',
+        exclude: 'current,minutely,alerts',
         appid: environment.api_keys.weatherKey,
       },
     });
-  }
-
-  public getWeatherByPlace(place: GeoObject): Observable<ResultItem> {
-    const coords = place.Point.pos.split(' ') as PositionCoords;
-
-    return this.http
-      .get<WeatherResponse>(environment.api_keys.weatherUrl, {
-        params: {
-          lon: coords[0],
-          lat: coords[1],
-          units: 'metric',
-          lang: 'ru',
-          exclude: 'current,minutely,alerts',
-          appid: environment.api_keys.weatherKey,
-        },
-      })
-      .pipe(map((weather) => ({ weather, place })));
   }
 }

@@ -1,17 +1,24 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GeoObject, WeatherResponse } from '../weather';
 import Swiper, { SwiperOptions } from 'swiper';
+import { CoordsWeather } from '../weather';
 
 @Component({
   selector: 'app-result-bar',
   templateUrl: './result-bar.component.html',
   styleUrls: ['./result-bar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultBarComponent implements OnInit {
-  @Input() place: GeoObject;
-  @Input() weather: WeatherResponse;
+  @Input() result: CoordsWeather;
+
   config: SwiperOptions = {
+    // initialSlide: this.getInitialSlide(),
     loop: false,
     slidesPerView: 4,
     slidesPerGroup: 1,
@@ -37,8 +44,7 @@ export class ResultBarComponent implements OnInit {
       },
     },
     on: {
-      paginationUpdate: (swiper: Swiper, paginationEl: HTMLElement): void => {
-        console.log(swiper.activeIndex);
+      paginationUpdate: (swiper: Swiper): void => {
         this.changeURL(swiper.activeIndex);
       },
     },
@@ -55,4 +61,8 @@ export class ResultBarComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  private getInitialSlide(): number {
+    return parseInt(this.route.snapshot.queryParamMap.get('slideId'), 10) ?? 0;
+  }
 }

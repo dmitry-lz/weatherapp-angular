@@ -1,29 +1,50 @@
-<swiper *ngIf="weather" [config]="config" class="weather">
+<swiper
+  *ngIf="result"
+  [config]="config"
+  class="weather"
+>
   <div class="swiper-wrapper">
-    <div *ngFor="let item of weather.daily" class="weather__item swiper-slide">
-      <span class="weather__item__time">{{item.dt * 1000 | date:'dd LLL':'ru-RU'}}</span> <!-- $ 1000 - UTC string that comes from server misses 1000 so we multiply it right here -->
+    <div
+      *ngFor="let item of result.daily"
+      class="weather__item swiper-slide"
+    >
+      <span class="weather__item__time">{{item.dt * 1000 | date:'dd LLL':'ru-RU'}}</span>
+      <!-- $ 1000 - UTC string that comes from server misses 1000 so we multiply it right here -->
       <div class="weather__item__icon">
 
-        <div *ngIf="item.weather[0].main === 'Clouds'" class="icon cloudy">
+        <div
+          *ngIf="item.weather[0].main === 'Clouds'"
+          class="icon cloudy"
+        >
           <div class="cloud"></div>
           <div class="cloud"></div>
         </div>
-        
-        <div *ngIf="item.weather[0].main === 'Snow'" class="icon flurries"> <!-- не нашел где сейчас снег -->
+
+        <div
+          *ngIf="item.weather[0].main === 'Snow'"
+          class="icon flurries"
+        >
+          <!-- не нашел где сейчас снег -->
           <div class="cloud"></div>
           <div class="snow">
             <div class="flake"></div>
             <div class="flake"></div>
           </div>
         </div>
-        
-        <div *ngIf="item.weather[0].main === 'Clear'" class="icon sunny">
+
+        <div
+          *ngIf="item.weather[0].main === 'Clear'"
+          class="icon sunny"
+        >
           <div class="sun">
             <div class="rays"></div>
           </div>
         </div>
-        
-        <div *ngIf="item.weather[0].main === 'Rain'" class="icon rainy">
+
+        <div
+          *ngIf="item.weather[0].main === 'Rain'"
+          class="icon rainy"
+        >
           <div class="cloud"></div>
           <div class="rain"></div>
         </div>
