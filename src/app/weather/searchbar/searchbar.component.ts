@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import {
@@ -7,12 +7,11 @@ import {
   distinctUntilChanged,
   debounceTime,
   filter,
-  map,
   tap,
   shareReplay,
 } from 'rxjs/operators';
 
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { WeatherService } from '../weather.service';
 import { GeoObject, Coords, CoordsWeather } from '../weather';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -32,13 +31,11 @@ export class SearchbarComponent implements OnInit {
 
   myControl = new FormControl();
   options: Observable<GeoObject[]>;
-  selectedPlace = new Subject<GeoObject>();
-  weatherItem: Observable<CoordsWeather> = this.selectedPlace.pipe(
-    map((place) => this.coordsOfPlace(place)),
-    startWith(this.initialCoords()),
+  selectedCoords = new BehaviorSubject<Coords>(this.initialCoords());
+  weatherItem: Observable<CoordsWeather> = this.selectedCoords.pipe(
     filter((coords) => this.filterCoords(coords)),
     tap((coords) => this.writeCoords(coords)),
-    switchMap((coords) => this.weatherService.getCoordsWeather(coords)),
+    switchMap((coords) => this.weatherService.getWeatherByCoords(coords)),
     shareReplay(1)
   );
 
@@ -61,15 +58,21 @@ export class SearchbarComponent implements OnInit {
   }
 
   selectValue(event: MatAutocompleteSelectedEvent): void {
-    const place: GeoObject = event.option.value;
-
-    this.selectedPlace.next(place);
+    this.selectedCoords.next(this.coordsOfPlace(event.option.value));
   }
 
   private initialCoords(): Coords {
-    const params = this.route.snapshot.queryParamMap;
+    const params = this.route.snapshot.queryParams;
 
-    return { lat: params.get('lat'), lon: params.get('lon') };
+    console.log('initial coords %o', {
+      lat: params.lat,
+      lon: params.lon,
+    });
+
+    return {
+      lat: params.lat,
+      lon: params.lon,
+    };
   }
 
   private coordsOfPlace(place: GeoObject): Coords {
